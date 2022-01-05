@@ -1,7 +1,7 @@
 type GuitarType = ['acoustic', 'electric', 'ukulele'];
 
 export type Guitar = {
-  id: number;
+  id: string;
   name: string;
   vendorCode: string;
   type: GuitarType;
