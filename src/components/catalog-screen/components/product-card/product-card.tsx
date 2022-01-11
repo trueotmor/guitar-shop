@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { STARS_COUNT } from '../../../consts/consts';
-import { Guitar } from '../../../types/guitar';
+import { STARS_COUNT } from '../../../../consts/consts';
+import { Guitar } from '../../../../types/guitar';
 import uniqid from 'uniqid';
 
 type ProductCardProps = {

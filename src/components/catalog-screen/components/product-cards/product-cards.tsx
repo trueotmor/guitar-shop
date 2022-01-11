@@ -1,9 +1,9 @@
 import { memo } from 'react';
-import { EMPTY_GUITARS_LIST_NOTICE, FetchStatus } from '../../../consts/consts';
-import { Guitars } from '../../../types/guitars';
-import EmptyGuitarsListNotice from '../../common/empty-guitars-list-notice/empty-guitars-list-notice';
-import Loading from '../../common/loading/loading';
-import ProductCard from './product-card';
+import { EMPTY_GUITARS_LIST_NOTICE, FetchStatus } from '../../../../consts/consts';
+import { Guitars } from '../../../../types/guitars';
+import EmptyGuitarsListNotice from '../../../common/empty-guitars-list-notice/empty-guitars-list-notice';
+import Loading from '../../../common/loading/loading';
+import ProductCard from '../product-card/product-card';
 
 type Props = {
   guitars: Guitars;

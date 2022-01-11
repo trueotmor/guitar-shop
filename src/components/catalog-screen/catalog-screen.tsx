@@ -1,18 +1,17 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchGuitarsAction } from '../../store/catalog/catalog-api';
-import ProductCards from './components/product-cards';
+import ProductCards from './components/product-cards/product-cards';
 import { getFetchStatus, getGuitars } from '../../store/catalog/catalog-selectors';
+import CatalogSorting from './components/catalog-sorting/catalog-sorting';
 
 function CatalogScreen(): JSX.Element {
   const dispatch = useDispatch();
   const guitars = useSelector(getGuitars);
   const fetchStatus = useSelector(getFetchStatus);
 
-  // console.log(guitars);
-
   useEffect(() => {
-    dispatch(fetchGuitarsAction());
+    dispatch(fetchGuitarsAction({}));
   }, [dispatch]);
 
   return (
@@ -87,36 +86,8 @@ function CatalogScreen(): JSX.Element {
             </div>
           </fieldset>
         </form>
-        <div className="catalog-sort">
-          <h2 className="catalog-sort__title">Сортировать:</h2>
-          <div className="catalog-sort__type">
-            <button
-              className="catalog-sort__type-button catalog-sort__type-button--active"
-              aria-label="по цене"
-              tabIndex={-1}
-            >
-              по цене
-            </button>
-            <button className="catalog-sort__type-button" aria-label="по популярности">
-              по популярности
-            </button>
-          </div>
-          <div className="catalog-sort__order">
-            <button
-              className="catalog-sort__order-button catalog-sort__order-button--up catalog-sort__order-button--active"
-              aria-label="По возрастанию"
-              tabIndex={-1}
-            >
-              {}
-            </button>
-            <button
-              className="catalog-sort__order-button catalog-sort__order-button--down"
-              aria-label="По убыванию"
-            >
-              {}
-            </button>
-          </div>
-        </div>
+
+        <CatalogSorting />
 
         <ProductCards guitars={guitars} fetchStatus={fetchStatus} />
 
