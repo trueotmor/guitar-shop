@@ -10,13 +10,13 @@ import { fetchGuitars } from '../../../services/fetch-guitars';
 function FormSearch() {
   const [givenValue, setGivenValue] = useState('');
   const [result, setResult] = useState<Guitars>([]);
-  const debouncedValue = useDebounce(givenValue, 500);
+  const nameLike = useDebounce(givenValue, 500);
 
   useEffect(() => {
-    fetchGuitars({ debouncedValue }).then((response) => {
+    fetchGuitars({ nameLike }).then((response) => {
       setResult(response);
     });
-  }, [debouncedValue]);
+  }, [nameLike]);
 
   const navigate = useNavigate();
 

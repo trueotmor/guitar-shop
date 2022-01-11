@@ -1,3 +1,6 @@
 export type FetchGuitarsParams = {
-  debouncedValue?: string;
+  nameLike?: string;
+  comments?: boolean;
+  sortType?: string;
+  sortOrder?: string;
 };
