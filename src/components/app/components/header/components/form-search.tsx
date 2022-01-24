@@ -1,16 +1,16 @@
 import classNames from 'classnames';
 import { ChangeEvent, memo, useState, MouseEvent, FormEvent, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AppRoute } from '../../../consts/app-routes';
-import { Guitars } from '../../../types/guitars';
-import styles from '../components/form-search.module.scss';
+import { useHistory } from 'react-router-dom';
+import { AppRoute } from '../../../../../consts/app-routes';
+import { Guitars } from '../../../../../types/guitars';
+import styles from './form-search.module.scss';
 import { useDebounce } from 'usehooks-ts';
-import { fetchGuitars } from '../../../services/fetch-guitars';
+import { fetchGuitars } from '../../../../../store/catalog/catalog-api-search';
 
 function FormSearch() {
   const [givenValue, setGivenValue] = useState('');
   const [result, setResult] = useState<Guitars>([]);
-  const nameLike = useDebounce(givenValue, 500);
+  const nameLike = useDebounce(givenValue, 500).trim();
 
   useEffect(() => {
     fetchGuitars({ nameLike }).then((response) => {
@@ -18,14 +18,14 @@ function FormSearch() {
     });
   }, [nameLike]);
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const handleInputValue = (evt: ChangeEvent<HTMLInputElement>) => {
     setGivenValue(evt.currentTarget.value);
   };
 
   const handleItemClick = (evt: MouseEvent<HTMLLIElement>) => {
-    navigate(AppRoute.getGuitar(evt.currentTarget.id));
+    history.push(AppRoute.getGuitar(evt.currentTarget.id));
   };
 
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
@@ -62,13 +62,7 @@ function FormSearch() {
         })}
       >
         {result.map(({ id, name }) => (
-          <li
-            className="form-search__select-item"
-            tabIndex={0}
-            id={`${id}`}
-            key={id}
-            onClick={handleItemClick}
-          >
+          <li className="form-search__select-item" tabIndex={0} id={`${id}`} key={id} onClick={handleItemClick}>
             {name}
           </li>
         ))}

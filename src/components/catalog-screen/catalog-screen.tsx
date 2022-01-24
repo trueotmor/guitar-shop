@@ -1,123 +1,74 @@
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchGuitarsAction } from '../../store/catalog/catalog-api';
-import ProductCards from './components/product-cards/product-cards';
-import { getFetchStatus, getGuitars } from '../../store/catalog/catalog-selectors';
+import { fetchGuitarsAction, fetchGuitarsPriceAction } from '../../store/catalog/catalog-api';
+import ProductList from './components/products-list/products-list';
+import {
+  getFetchStatus,
+  getFilterPrice,
+  getGuitars,
+  getGuitarsCount,
+  getSortOrder,
+  getSortType
+} from '../../store/catalog/catalog-selectors';
 import CatalogSorting from './components/catalog-sorting/catalog-sorting';
+import CatalogFiltering from './components/catalog-filtering/catalog-filtering';
+import CatalogPagination from './components/catalog-pagination/catalog-pagination';
+import CatalogBreadcrumbs from './components/catalog-breadcrumbs/catalog-breadcrumbs';
+import { useQuery } from '../../hooks/use-query';
+import { useParams } from 'react-router-dom';
+import { AppRoute, NavigateRoute, QueryRoute } from '../../consts/app-routes';
+import { paginationData } from '../../consts/pagination-data';
+import { getFullDataQuery, getNavigateQuery, getQuery, getResultFilterSortParams } from '../../utils/get-query';
+import LoadingWrapper from '../common/loading-wrapper/loading-wrapper';
 
 function CatalogScreen(): JSX.Element {
   const dispatch = useDispatch();
   const guitars = useSelector(getGuitars);
   const fetchStatus = useSelector(getFetchStatus);
+  const guitarsCount = useSelector(getGuitarsCount);
+
+  const searchParams = useQuery();
+  const { query } = useParams<{ query: string }>();
+  const currentPage = +query;
+
+  const sortType = useSelector(getSortType);
+  const sortOrder = useSelector(getSortOrder);
+  const filterPrice = useSelector(getFilterPrice);
+
+  const allTypes = searchParams.getAll(NavigateRoute.Type);
+  const allStrings = searchParams.getAll(NavigateRoute.StringCount);
+
+  const typeParams = getQuery(QueryRoute.Type, allTypes);
+  const stringsParams = getQuery(QueryRoute.Strings, allStrings);
+
+  const filterSortParams = getResultFilterSortParams(filterPrice, sortType, sortOrder, typeParams, stringsParams);
+
+  const fullDataQuery = getFullDataQuery(filterSortParams, currentPage);
+  const pricesQuery = [QueryRoute.SortPrice, typeParams, stringsParams].join('');
+
+  const navigateQuery = getNavigateQuery(AppRoute.Catalog, currentPage, filterSortParams);
 
   useEffect(() => {
-    dispatch(fetchGuitarsAction({}));
-  }, [dispatch]);
+    dispatch(fetchGuitarsAction(fullDataQuery));
+    dispatch(fetchGuitarsPriceAction(pricesQuery));
+  }, [fullDataQuery, dispatch, pricesQuery, navigateQuery]);
 
   return (
     <>
       <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
-      <ul className="breadcrumbs page-content__breadcrumbs">
-        <li className="breadcrumbs__item">
-          <a className="link" href="./main.html">
-            Главная
-          </a>
-        </li>
-        <li className="breadcrumbs__item">
-          <a className="link" href="/">
-            Каталог
-          </a>
-        </li>
-      </ul>
+      <CatalogBreadcrumbs />
       <div className="catalog">
-        <form className="catalog-filter">
-          <h2 className="title title--bigger catalog-filter__title">Фильтр</h2>
-          <fieldset className="catalog-filter__block">
-            <legend className="catalog-filter__block-title">Цена, ₽</legend>
-            <div className="catalog-filter__price-range">
-              <div className="form-input">
-                <label className="visually-hidden">Минимальная цена</label>
-                <input type="number" placeholder="1 000" id="priceMin" name="от" />
-              </div>
-              <div className="form-input">
-                <label className="visually-hidden">Максимальная цена</label>
-                <input type="number" placeholder="30 000" id="priceMax" name="до" />
-              </div>
-            </div>
-          </fieldset>
-          <fieldset className="catalog-filter__block">
-            <legend className="catalog-filter__block-title">Тип гитар</legend>
-            <div className="form-checkbox catalog-filter__block-item">
-              <input className="visually-hidden" type="checkbox" id="acoustic" name="acoustic" />
-              <label htmlFor="acoustic">Акустические гитары</label>
-            </div>
-            <div className="form-checkbox catalog-filter__block-item">
-              <input className="visually-hidden" type="checkbox" id="electric" name="electric" />
-              <label htmlFor="electric">Электрогитары</label>
-            </div>
-            <div className="form-checkbox catalog-filter__block-item">
-              <input className="visually-hidden" type="checkbox" id="ukulele" name="ukulele" />
-              <label htmlFor="ukulele">Укулеле</label>
-            </div>
-          </fieldset>
-          <fieldset className="catalog-filter__block">
-            <legend className="catalog-filter__block-title">Количество струн</legend>
-            <div className="form-checkbox catalog-filter__block-item">
-              <input className="visually-hidden" type="checkbox" id="4-strings" name="4-strings" />
-              <label htmlFor="4-strings">4</label>
-            </div>
-            <div className="form-checkbox catalog-filter__block-item">
-              <input className="visually-hidden" type="checkbox" id="6-strings" name="6-strings" />
-              <label htmlFor="6-strings">6</label>
-            </div>
-            <div className="form-checkbox catalog-filter__block-item">
-              <input className="visually-hidden" type="checkbox" id="7-strings" name="7-strings" />
-              <label htmlFor="7-strings">7</label>
-            </div>
-            <div className="form-checkbox catalog-filter__block-item">
-              <input
-                className="visually-hidden"
-                type="checkbox"
-                id="12-strings"
-                name="12-strings"
-                disabled
-              />
-              <label htmlFor="12-strings">12</label>
-            </div>
-          </fieldset>
-        </form>
-
+        <CatalogFiltering />
         <CatalogSorting />
-
-        <ProductCards guitars={guitars} fetchStatus={fetchStatus} />
-
-        <div className="pagination page-content__pagination">
-          <ul className="pagination__list">
-            <li className="pagination__page pagination__page--active">
-              <a className="link pagination__page-link" href="1">
-                1
-              </a>
-            </li>
-            <li className="pagination__page">
-              <a className="link pagination__page-link" href="2">
-                2
-              </a>
-            </li>
-            <li className="pagination__page">
-              <a className="link pagination__page-link" href="3">
-                3
-              </a>
-            </li>
-            <li className="pagination__page pagination__page--next" id="next">
-              <a className="link pagination__page-link" href="2">
-                Далее
-              </a>
-            </li>
-          </ul>
-        </div>
+        <LoadingWrapper fetchStatus={fetchStatus}>
+          <>
+            <ProductList guitars={guitars} />
+            {guitarsCount > paginationData.guitarsOnPage && <CatalogPagination guitarsCount={guitarsCount} />}
+          </>
+        </LoadingWrapper>
       </div>
     </>
   );
 }
 
-export default CatalogScreen;
+export default memo(CatalogScreen);

@@ -1,8 +1,6 @@
-import { Routes, Route } from 'react-router-dom';
-import CatalogScreen from '../catalog-screen/catalog-screen';
-import Footer from '../footer/footer';
-import Header from '../header/header';
-import NotFoundPage from '../not-found-page/not-found-page';
+import Footer from './components/footer/footer';
+import Header from './components/header/header';
+import Routes from './components/routes/routes';
 
 function App(): JSX.Element {
   return (
@@ -10,10 +8,7 @@ function App(): JSX.Element {
       <Header />
       <main className="page-content">
         <div className="container">
-          <Routes>
-            <Route path="/" element={<CatalogScreen />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+          <Routes />
         </div>
       </main>
       <Footer />

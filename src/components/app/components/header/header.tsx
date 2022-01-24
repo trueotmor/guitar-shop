@@ -1,24 +1,20 @@
+import { Link } from 'react-router-dom';
+import { AppRoute } from '../../../../consts/app-routes';
 import FormSearch from './components/form-search';
 
 function Header(): JSX.Element {
   return (
     <header className="header" id="header">
       <div className="container header__wrapper">
-        <a className="header__logo logo" href="/">
-          <img
-            className="logo__img"
-            width="70"
-            height="70"
-            src="./img/svg/logo.svg"
-            alt="Логотип"
-          />
-        </a>
+        <Link className="header__logo logo" to={AppRoute.Main}>
+          <img className="logo__img" width="70" height="70" src="../img/svg/logo.svg" alt="Логотип" />
+        </Link>
         <nav className="main-nav">
           <ul className="main-nav__list">
             <li>
-              <a className="link main-nav__link link--current" href="/">
+              <Link className="link main-nav__link link--current" to={`${AppRoute.Catalog}${AppRoute.Page}`}>
                 Каталог
-              </a>
+              </Link>
             </li>
             <li>
               <a className="link main-nav__link" href="/">

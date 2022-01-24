@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../consts/app-routes';
 
-function NotFoundPage() {
+function NotFoundScreen() {
   return (
     <>
       <h1>Error 404</h1>
@@ -13,4 +13,4 @@ function NotFoundPage() {
   );
 }
 
-export default NotFoundPage;
+export default NotFoundScreen;

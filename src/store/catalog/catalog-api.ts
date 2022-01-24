@@ -1,37 +1,37 @@
+import { QueryRoute } from '../../consts/app-routes';
 import { FetchStatus } from '../../consts/consts';
+import { GUITARS_COUNT_FROM_HEADERS } from '../../consts/guitar-data';
 import { ServerRoute } from '../../consts/server-settings';
-import { FetchGuitarsParams } from '../../types/fetch-guitars-params';
 import { Guitars } from '../../types/guitars';
 import { AsyncAction } from '../store';
-import { loadGuitars, setFetchStatus } from './catalog-data';
+import { loadGuitars, loadGuitarsPrices, setFetchStatus, setGuitarsCount, setPricesFetchStatus } from './catalog-data';
 
-const fetchGuitarsAction = (params: FetchGuitarsParams): AsyncAction => {
-  const { nameLike, sortType, sortOrder, comments } = params;
-  console.log(params);
-  const searchParams = new URLSearchParams();
-  console.log(sortType);
-  nameLike && searchParams.append('name_like', nameLike);
-  comments && searchParams.append('_embed', 'comments');
-  sortType && searchParams.append('_sort', sortType);
-  sortOrder && searchParams.append('_order', sortOrder);
-  console.log(searchParams);
+const fetchGuitarsAction = (params: string, comments = true): AsyncAction => {
+  const query = `${ServerRoute.Guitars}?${comments && QueryRoute.CommentsEmbed}${params}`;
 
   return async (dispatch, _getState, api) => {
     try {
       dispatch(setFetchStatus(FetchStatus.Fetching));
-      const { data } = await api.get<Guitars>(ServerRoute.Guitars, {
-        params: {
-          ...searchParams,
-        },
-      });
+      const { data, headers } = await api.get<Guitars>(query);
+
+      dispatch(setGuitarsCount(+headers[GUITARS_COUNT_FROM_HEADERS]));
       dispatch(loadGuitars(data));
-      dispatch(setFetchStatus(FetchStatus.Fetched));
-      return Promise.resolve();
     } catch (error) {
       dispatch(setFetchStatus(FetchStatus.Error));
-      return Promise.reject();
     }
   };
 };
 
-export { fetchGuitarsAction };
+const fetchGuitarsPriceAction = (params: string): AsyncAction => {
+  const query = `${ServerRoute.Guitars}?${params}`;
+  return async (dispatch, _getState, api) => {
+    try {
+      const { data } = await api.get<Guitars>(query);
+      dispatch(loadGuitarsPrices(data));
+    } catch {
+      dispatch(setPricesFetchStatus(FetchStatus.Error));
+    }
+  };
+};
+
+export { fetchGuitarsAction, fetchGuitarsPriceAction };

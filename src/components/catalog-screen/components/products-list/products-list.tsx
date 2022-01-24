@@ -1,20 +1,14 @@
 import { memo } from 'react';
-import { EMPTY_GUITARS_LIST_NOTICE, FetchStatus } from '../../../../consts/consts';
+import { EMPTY_GUITARS_LIST_NOTICE } from '../../../../consts/consts';
 import { Guitars } from '../../../../types/guitars';
 import EmptyGuitarsListNotice from '../../../common/empty-guitars-list-notice/empty-guitars-list-notice';
-import Loading from '../../../common/loading/loading';
-import ProductCard from '../product-card/product-card';
+import ProductCard from './product-card';
 
 type Props = {
   guitars: Guitars;
-  fetchStatus: FetchStatus;
 };
 
-function ProductCards({ guitars, fetchStatus }: Props): JSX.Element {
-  if (fetchStatus === FetchStatus.Fetching) {
-    return <Loading />;
-  }
-
+function ProductList({ guitars }: Props): JSX.Element {
   if (!guitars.length) {
     return <EmptyGuitarsListNotice notice={EMPTY_GUITARS_LIST_NOTICE} />;
   }
@@ -29,4 +23,4 @@ function ProductCards({ guitars, fetchStatus }: Props): JSX.Element {
   );
 }
 
-export default memo(ProductCards);
+export default memo(ProductList);
