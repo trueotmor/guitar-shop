@@ -10,7 +10,5 @@ export const getSortOrder = (state: State): SortOrder => state[SliceNames.Catalo
 export const getGuitarsPrices = (state: State): Guitars => state[SliceNames.Catalog].guitarsPrices;
 export const getPricesFetchStatus = (state: State): FetchStatus => state[SliceNames.Catalog].filterPricesFetchStatus;
 export const getCurrentPage = (state: State): number | null => state[SliceNames.Catalog].currentCatalogPage;
-export const getFilterType = (state: State): string[] => state[SliceNames.Catalog].filterType;
-export const getFilterStrings = (state: State): string[] => state[SliceNames.Catalog].filterStrings;
 export const getFilterPrice = (state: State): FilterPrice => state[SliceNames.Catalog].filterPrice;
 export const getGuitarsCount = (state: State): number => state[SliceNames.Catalog].guitarsCount;

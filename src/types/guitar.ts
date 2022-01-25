@@ -1,11 +1,5 @@
 type GuitarTypes = ['acoustic', 'electric', 'ukulele'];
 
-export const GuitarType = {
-  Electric: 'electric',
-  Acoustic: 'acoustic',
-  Ukulele: 'ukulele',
-};
-
 export type CommentsGet = {
   id: string;
   userName: string;

@@ -54,7 +54,7 @@ function CatalogPagination({ guitarsCount }: CatalogPaginationProps): JSX.Elemen
   }, [history, urlQuery, currentPage]);
 
   return (
-    <div className="pagination page-content__pagination">
+    <div className="pagination page-content__pagination" data-testid="pagination">
       <ul className="pagination__list">
         {currentPage !== startPage && (
           <li className="pagination__page pagination__page--prev" id="prev">
