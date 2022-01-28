@@ -14,6 +14,7 @@ const initialState = {
   filterStrings: [],
   filterPrice: { minPrice: '', maxPrice: '' },
   currentCatalogPage: null,
+  serverErrorStatus: false,
 };
 
 const catalogSlice = createSlice({
@@ -65,6 +66,9 @@ const catalogSlice = createSlice({
     setGuitarsCount: (state, action) => {
       state.guitarsCount = action.payload;
     },
+    setServerErrorStatus: (state) => {
+      state.serverErrorStatus = true;
+    },
   },
 });
 
@@ -81,4 +85,5 @@ export const {
   changeFilterStrings,
   changeCatalogPage,
   setGuitarsCount,
+  setServerErrorStatus,
 } = catalogSlice.actions;

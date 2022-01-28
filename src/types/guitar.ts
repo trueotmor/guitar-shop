@@ -23,3 +23,9 @@ export type Guitar = {
   price: number;
   comments?: CommentsGet[];
 };
+
+export type GuitarDataType = {
+  type: string;
+  label: string;
+  stringsCount: string[];
+};

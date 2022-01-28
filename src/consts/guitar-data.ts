@@ -1,3 +1,5 @@
+import { GuitarDataType } from '../types/guitar';
+
 const guitarType = {
   Electric: 'electric',
   Acoustic: 'acoustic',
@@ -11,7 +13,7 @@ const stringsCount = {
   Twelve: '12',
 };
 
-const guitarsData = [
+const guitarsData: GuitarDataType[] = [
   {
     type: guitarType.Acoustic,
     label: 'Акустические гитары',

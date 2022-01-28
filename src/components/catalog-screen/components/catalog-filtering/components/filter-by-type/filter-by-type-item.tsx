@@ -9,9 +9,10 @@ import { NavigateRoute } from '../../../../../../consts/app-routes';
 type FilterTypeItemProps = {
   type: string;
   label: string;
+  isDisabled: boolean;
 };
 
-function FilterByTypeItem({ type, label }: FilterTypeItemProps): JSX.Element {
+function FilterByTypeItem({ type, label, isDisabled }: FilterTypeItemProps): JSX.Element {
   const dispatch = useDispatch();
   const history = useHistory();
   const query = useQuery();
@@ -49,6 +50,7 @@ function FilterByTypeItem({ type, label }: FilterTypeItemProps): JSX.Element {
         name={type}
         checked={isChecked}
         onChange={onInputChange}
+        disabled={isDisabled}
       />
       <label htmlFor={type}>{label}</label>
     </div>

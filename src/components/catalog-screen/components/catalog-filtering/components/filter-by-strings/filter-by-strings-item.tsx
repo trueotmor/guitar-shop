@@ -8,9 +8,10 @@ import { NavigateRoute } from '../../../../../../consts/app-routes';
 
 type FilterStringsItemProps = {
   stringsCount: string;
+  isDisabled: boolean;
 };
 
-function FilterByStringsItem({ stringsCount }: FilterStringsItemProps): JSX.Element {
+function FilterByStringsItem({ stringsCount, isDisabled }: FilterStringsItemProps): JSX.Element {
   const stringName = `${stringsCount}-strings`;
   const dispatch = useDispatch();
   const history = useHistory();
@@ -50,6 +51,7 @@ function FilterByStringsItem({ stringsCount }: FilterStringsItemProps): JSX.Elem
         data-strings={stringsCount}
         checked={isChecked}
         onChange={onInputChange}
+        disabled={isDisabled}
       />
       <label htmlFor={stringName}>{stringsCount}</label>
     </div>

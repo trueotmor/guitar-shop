@@ -12,3 +12,4 @@ export const getPricesFetchStatus = (state: State): FetchStatus => state[SliceNa
 export const getCurrentPage = (state: State): number | null => state[SliceNames.Catalog].currentCatalogPage;
 export const getFilterPrice = (state: State): FilterPrice => state[SliceNames.Catalog].filterPrice;
 export const getGuitarsCount = (state: State): number => state[SliceNames.Catalog].guitarsCount;
+export const getServerErrorStatus = (state: State): boolean => state[SliceNames.Catalog].serverErrorStatus;

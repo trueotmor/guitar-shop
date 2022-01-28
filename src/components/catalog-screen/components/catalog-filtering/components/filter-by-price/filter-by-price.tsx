@@ -20,8 +20,6 @@ function FilterByPrice(): JSX.Element {
   const fetchStatus = useSelector(getPricesFetchStatus);
 
   const guitarsPrices = useSelector(getGuitarsPrices);
-  const minPrice = guitarsPrices[0].price;
-  const maxPrice = guitarsPrices[guitarsPrices.length - 1].price;
 
   const isLoading = fetchStatus === FetchStatus.Fetching;
 
@@ -34,8 +32,11 @@ function FilterByPrice(): JSX.Element {
   const [currentMin, setCurrentMin] = useState(minParams);
   const [currentMax, setCurrentMax] = useState(maxParams);
 
-  const debounceMinPrice = useDebounce(currentMin, 500);
-  const debounceMaxPrice = useDebounce(currentMax, 500);
+  const debounceMinPrice = useDebounce(currentMin, 666);
+  const debounceMaxPrice = useDebounce(currentMax, 666);
+
+  const minPrice = guitarsPrices[0].price;
+  const maxPrice = guitarsPrices[guitarsPrices.length - 1].price;
 
   const onMinPriceChange = (): void => {
     if (minPriceRef.current) {
@@ -44,12 +45,17 @@ function FilterByPrice(): JSX.Element {
       if (minInput) {
         minPriceRef.current.setCustomValidity(validate(minInput));
         minPriceRef.current.reportValidity();
+
         setCurrentMin(minInput);
+
         searchParams.set(NavigateRoute.MinPrice, minInput);
+
         dispatch(changeCatalogPage(FIRST_PAGE));
+
         history.push({ pathname: NavigateRoute.StartPagePathname, search: searchParams.toString() });
         return;
       }
+
       setCurrentMin('');
       searchParams.delete(NavigateRoute.MinPrice);
       history.replace({ pathname: NavigateRoute.StartPagePathname, search: searchParams.toString() });
@@ -122,8 +128,29 @@ function FilterByPrice(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(changeFilterPrice({ minPrice: debounceMinPrice, maxPrice: debounceMaxPrice }));
-  }, [dispatch, debounceMinPrice, debounceMaxPrice]);
+    let resultMinPrice = debounceMinPrice;
+    let resultMaxPrice = debounceMaxPrice;
+
+    if (resultMinPrice !== '') {
+      if (+resultMinPrice < minPrice) {
+        resultMinPrice = minPrice.toString();
+      } else if (+resultMinPrice > maxPrice) {
+        resultMinPrice = maxPrice.toString();
+      }
+      setCurrentMin(resultMinPrice);
+    }
+
+    if (resultMaxPrice !== '') {
+      if (+resultMaxPrice > maxPrice) {
+        resultMaxPrice = maxPrice.toString();
+      } else if (+resultMaxPrice < +resultMinPrice) {
+        resultMaxPrice = resultMinPrice;
+      }
+      setCurrentMax(resultMaxPrice);
+    }
+
+    dispatch(changeFilterPrice({ minPrice: resultMinPrice, maxPrice: resultMaxPrice }));
+  }, [dispatch, debounceMinPrice, debounceMaxPrice, minPrice, maxPrice]);
 
   return (
     <fieldset className="catalog-filter__block">
